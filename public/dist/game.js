@@ -46,7 +46,7 @@ function setup() {
   }, 4000);
 
   function animate() {
-    ground.tilePosition.x -= 1.2 ;
+    ground.tilePosition.x -= 1.2;
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= 1.2;
     }
