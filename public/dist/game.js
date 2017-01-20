@@ -23,19 +23,27 @@ function setup() {
 
   var pipes = new PIXI.Container();
 
-  setInterval(() => {
-    var randomY = Math.round(Math.random() * 150) + 25;
-    if (pipes.children.length > 3) {
-      pipes.removeChildAt(0);
-    }
-    console.log('pipes', pipes.children.length);
-    var bottomPipeRectangle = new PIXI.Rectangle(84, 323, 26, 160);
-    var bottomPipeTexture = new PIXI.Texture(texture, bottomPipeRectangle);
-    var bottomPipe = new PIXI.Sprite(bottomPipeTexture);
-    bottomPipe.position.y = randomY;
-    bottomPipe.position.x = 144;
-    pipes.addChild(bottomPipe);
-  }, 1200);
+  setTimeout(() => {
+    setInterval(() => {
+      var randomY = Math.round(Math.random() * 100) + 80;
+      if (pipes.children.length > 3) {
+        pipes.removeChildAt(0);
+      }
+      var topPipeRectangle = new PIXI.Rectangle(56, 323, 26, 160);
+      var topPipeTexture = new PIXI.Texture(texture, topPipeRectangle);
+      var topPipe = new PIXI.Sprite(topPipeTexture);
+      topPipe.position.y = -215;
+      topPipe.position.y += randomY;
+      topPipe.position.x = 144;
+
+      var bottomPipeRectangle = new PIXI.Rectangle(84, 323, 26, 160);
+      var bottomPipeTexture = new PIXI.Texture(texture, bottomPipeRectangle);
+      var bottomPipe = new PIXI.Sprite(bottomPipeTexture);
+      bottomPipe.position.y = randomY;
+      bottomPipe.position.x = 144;
+      pipes.addChild(bottomPipe, topPipe);
+    }, 1175);
+  }, 4000);
 
   function animate() {
     ground.tilePosition.x -= 1.2 ;
