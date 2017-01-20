@@ -1,0 +1,9 @@
+body {
+  margin: 4px auto;
+  display: flex;
+  justify-content: center;
+}
+
+#gameView {
+  align-self: center;
+}
