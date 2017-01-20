@@ -45,17 +45,27 @@ function setup() {
     }, 1175);
   }, 4000);
 
+  var ticker = new PIXI.ticker.Ticker();
+  ticker.start();
+  var text = new PIXI.Text(`FPS: ${Math.round(ticker.FPS)}`,
+  {fontSize: 4, dropShadow: true, dropShadowDistance: 1, dropShadowBlur: 1, fill: 'white', fontWeight: 'bold'});
+
   function animate() {
     ground.tilePosition.x -= 1.2;
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= 1.2;
     }
+    ticker.update();
     renderer.render(stage);
     requestAnimationFrame(animate);
   }
 
+  setInterval(() => {
+    text.text = `FPS: ${Math.round(ticker.FPS)}`;
+  }, 1000)
+
   animate();
   stage.scale.x = 1;
   stage.scale.y = 1;
-  stage.addChild(background, pipes, ground);
+  stage.addChild(background, pipes, ground, text);
 }
