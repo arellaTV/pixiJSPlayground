@@ -13,6 +13,25 @@ PIXI.loader
 function setup() {
   var texture = new PIXI.BaseTexture.fromImage('images/spritesheet.png');
 
+  var playerRectangle1 = new PIXI.Rectangle(3, 491, 17, 12);
+  var playerRectangle2 = new PIXI.Rectangle(31, 491, 17, 12);
+  var playerRectangle3 = new PIXI.Rectangle(59, 491, 17, 12);
+  var playerTexture1 = new PIXI.Texture(texture, playerRectangle1);
+  var playerTexture2 = new PIXI.Texture(texture, playerRectangle2);
+  var playerTexture3 = new PIXI.Texture(texture, playerRectangle3);
+
+  var frames = [];
+  frames.push(playerTexture1);
+  frames.push(playerTexture2);
+  frames.push(playerTexture3);
+
+  var player = new PIXI.extras.MovieClip(frames);
+  player.animationSpeed = 0.15;
+  player.anchor.set(0.5);
+  player.position.x = 40;
+  player.position.y = 60;
+  player.play();
+
   var backgroundRectangle = new PIXI.Rectangle(0, 0, 144, 256);
   var backgroundTexture = new PIXI.Texture(texture, backgroundRectangle);
   var background = new PIXI.Sprite(backgroundTexture);
@@ -23,27 +42,27 @@ function setup() {
 
   var pipes = new PIXI.Container();
 
-  setTimeout(() => {
-    setInterval(() => {
-      var randomY = Math.round(Math.random() * 100) + 80;
-      if (pipes.children.length > 6) {
-        pipes.removeChildren(0, 2);
-      }
-      var topPipeRectangle = new PIXI.Rectangle(56, 323, 26, 160);
-      var topPipeTexture = new PIXI.Texture(texture, topPipeRectangle);
-      var topPipe = new PIXI.Sprite(topPipeTexture);
-      topPipe.position.y = -215;
-      topPipe.position.y += randomY;
-      topPipe.position.x = 144;
-
-      var bottomPipeRectangle = new PIXI.Rectangle(84, 323, 26, 160);
-      var bottomPipeTexture = new PIXI.Texture(texture, bottomPipeRectangle);
-      var bottomPipe = new PIXI.Sprite(bottomPipeTexture);
-      bottomPipe.position.y = randomY;
-      bottomPipe.position.x = 144;
-      pipes.addChild(bottomPipe, topPipe);
-    }, 1175);
-  }, 4000);
+  // setTimeout(() => {
+  //   setInterval(() => {
+  //     var randomY = Math.round(Math.random() * 100) + 80;
+  //     if (pipes.children.length > 6) {
+  //       pipes.removeChildren(0, 2);
+  //     }
+  //     var topPipeRectangle = new PIXI.Rectangle(56, 323, 26, 160);
+  //     var topPipeTexture = new PIXI.Texture(texture, topPipeRectangle);
+  //     var topPipe = new PIXI.Sprite(topPipeTexture);
+  //     topPipe.position.y = -215;
+  //     topPipe.position.y += randomY;
+  //     topPipe.position.x = 144;
+  //
+  //     var bottomPipeRectangle = new PIXI.Rectangle(84, 323, 26, 160);
+  //     var bottomPipeTexture = new PIXI.Texture(texture, bottomPipeRectangle);
+  //     var bottomPipe = new PIXI.Sprite(bottomPipeTexture);
+  //     bottomPipe.position.y = randomY;
+  //     bottomPipe.position.x = 144;
+  //     pipes.addChild(bottomPipe, topPipe);
+  //   }, 1175);
+  // }, 4000);
 
   var ticker = new PIXI.ticker.Ticker();
   ticker.start();
@@ -67,5 +86,5 @@ function setup() {
   animate();
   stage.scale.x = 1;
   stage.scale.y = 1;
-  stage.addChild(background, pipes, ground, text);
+  stage.addChild(background, player, pipes, ground, text);
 }
