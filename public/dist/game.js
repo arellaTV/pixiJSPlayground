@@ -9,3 +9,7 @@ var container = new PIXI.Container();
 PIXI.loader
   .add('images/spritesheet.png')
   .load(setup);
+
+var setup = function() {
+  
+}
