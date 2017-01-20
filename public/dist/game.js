@@ -1,2 +1,4 @@
+var renderer = PIXI.autoDetectRenderer(288,512);
 var gameView = document.getElementById('gameView');
-gameView.innerText = 'hello world';
+
+gameView.appendChild(renderer.view);
