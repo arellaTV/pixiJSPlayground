@@ -27,8 +27,9 @@ function setup() {
 
   var player = new PIXI.extras.MovieClip(frames);
   player.animationSpeed = 0.15;
-  player.anchor.set(0.5);
-  player.position.x = 40;
+  player.anchor.x = 0.75;
+  player.anchor.y = 0.5;
+  player.position.x = 50;
   player.position.y = 60;
   player.play();
   player.rotation = 0;
@@ -43,13 +44,14 @@ function setup() {
   var fall = true;
 
   function onButtonDown() {
-    console.log('clicking!');
     this.isdown = true;
     fall = false;
+    setTimeout(() => {
+      fall = true;
+    }, 600)
   }
 
   function onButtonUp() {
-    console.log('released!');
     this.isdown = false;
     fall = true;
   }
@@ -95,23 +97,23 @@ function setup() {
     }
     if (fall === true) {
       if (player.position.y < 194) {
-        player.position.y += 1;
+        player.position.y += 1.5;
       } else {
         player.position.y = 194;
       }
 
-      if (player.rotation < 1.25) {
-        player.rotation += 0.05;
+      if (player.rotation < 1.50) {
+        player.rotation += 0.075;
       } else {
-        player.rotation = 1.25;
+        player.rotation = 1.50;
       }
     } else {
-      player.position.y -= 1;
+      player.position.y -= 1.75;
 
-      if (player.rotation > -1.25) {
-        player.rotation -= 0.05;
+      if (player.rotation > -1) {
+        player.rotation -= 0.15;
       } else {
-        player.rotation === -1.25;
+        player.rotation === -1;
       }
     }
     ticker.update();
