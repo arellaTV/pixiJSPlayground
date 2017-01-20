@@ -1,4 +1,4 @@
-var renderer = PIXI.autoDetectRenderer(288,512);
+var renderer = PIXI.autoDetectRenderer(432,768);
 var gameView = document.getElementById('gameView');
 
 gameView.appendChild(renderer.view);
