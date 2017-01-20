@@ -31,6 +31,7 @@ function setup() {
   player.position.x = 40;
   player.position.y = 60;
   player.play();
+  player.rotation = 0;
 
   var backgroundRectangle = new PIXI.Rectangle(0, 0, 144, 256);
   var backgroundTexture = new PIXI.Texture(texture, backgroundRectangle);
@@ -98,8 +99,20 @@ function setup() {
       } else {
         player.position.y = 194;
       }
+
+      if (player.rotation < 1.25) {
+        player.rotation += 0.05;
+      } else {
+        player.rotation = 1.25;
+      }
     } else {
       player.position.y -= 1;
+
+      if (player.rotation > -1.25) {
+        player.rotation -= 0.05;
+      } else {
+        player.rotation === -1.25;
+      }
     }
     ticker.update();
     renderer.render(stage);
