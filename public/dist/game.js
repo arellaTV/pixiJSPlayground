@@ -26,8 +26,8 @@ function setup() {
   setTimeout(() => {
     setInterval(() => {
       var randomY = Math.round(Math.random() * 100) + 80;
-      if (pipes.children.length > 3) {
-        pipes.removeChildAt(0);
+      if (pipes.children.length > 6) {
+        pipes.removeChildren(0, 2);
       }
       var topPipeRectangle = new PIXI.Rectangle(56, 323, 26, 160);
       var topPipeTexture = new PIXI.Texture(texture, topPipeRectangle);
