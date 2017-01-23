@@ -97,18 +97,18 @@ function setup() {
       pipes.children[i].position.x -= 1.2;
     }
 
-    velocity += 0.3;
+    velocity += 0.2;
     player.position.y += velocity;
 
     if (player.rotation < 1.5) {
-      player.rotation += 0.075;
+      player.rotation += 0.05;
     } else {
       player.rotation = 1.5;
     }
 
     if (jump === true) {
       player.rotation = -0.5;
-      velocity = -3;
+      velocity = -2;
     }
 
     if (player.position.y >= 194) {
