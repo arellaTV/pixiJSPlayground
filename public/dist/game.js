@@ -5,6 +5,46 @@ var stage = new PIXI.Container();
 
 gameView.appendChild(renderer.view);
 
+function keyboard(keyCode) {
+  var key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+  key.press = undefined;
+  key.release = undefined;
+
+  key.downHandler =function(event) {
+    if (event.keyCode == key.code) {
+      if (key.isUp && key.press) {
+        key.press();
+        key.isDown = true;
+        key.isUp = false;
+      }
+    }
+    event.preventDefault();
+  }
+
+  key.upHandler = function(event) {
+    if (event.keyCode === key.code) {
+      if (key.isDown && key.release) {
+        key.release();
+        key.isDown = false;
+        key.isUp = true;
+      }
+    }
+    event.preventDefault();
+  }
+
+  window.addEventListener(
+    "keydown", key.downHandler.bind(key), false
+  );
+  window.addEventListener(
+    "keyup", key.upHandler.bind(key), false
+  )
+  return key;
+}
+
+var keyObject = keyboard(32);
 
 PIXI.loader
 .add('images/spritesheet.png')
@@ -40,6 +80,8 @@ function setup() {
   background.interactive = true;
   background.on('mousedown', onButtonDown);
   background.on('mouseup', onButtonUp);
+  keyObject.press = onButtonDown.bind(this);
+  keyObject.release = onButtonUp.bind(this);
 
   var jump = false;
 
@@ -146,6 +188,10 @@ function setup() {
 
     if (player.position.y >= 195) {
       player.position.y = 195;
+    }
+
+    if (player.position.y <= 0) {
+      player.position.y = 0;
     }
 
     if (collision(player, ground)) {
