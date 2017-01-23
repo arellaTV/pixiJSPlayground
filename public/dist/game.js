@@ -27,7 +27,7 @@ function setup() {
 
   var player = new PIXI.extras.MovieClip(frames);
   player.animationSpeed = 0.15;
-  player.anchor.x = 0.75;
+  player.anchor.x = 0.5;
   player.anchor.y = 0.5;
   player.position.x = 50;
   player.position.y = 60;
@@ -41,19 +41,19 @@ function setup() {
   background.on('mousedown', onButtonDown);
   background.on('mouseup', onButtonUp);
 
-  var fall = true;
+  var jump = false;
 
   function onButtonDown() {
     this.isdown = true;
-    fall = false;
+    jump = true;
     setTimeout(() => {
-      fall = true;
-    }, 600)
+      jump = false;
+    }, 200)
   }
 
   function onButtonUp() {
     this.isdown = false;
-    fall = true;
+    jump = false;
   }
 
 
@@ -90,32 +90,31 @@ function setup() {
   var text = new PIXI.Text(`FPS: ${Math.round(ticker.FPS)}`,
   {fontSize: 4, dropShadow: true, dropShadowDistance: 1, dropShadowBlur: 1, fill: 'white', fontWeight: 'bold'});
 
+  var velocity = 0;
   function animate() {
     ground.tilePosition.x -= 1.2;
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= 1.2;
     }
-    if (fall === true) {
-      if (player.position.y < 194) {
-        player.position.y += 1.5;
-      } else {
-        player.position.y = 194;
-      }
 
-      if (player.rotation < 1.50) {
-        player.rotation += 0.075;
-      } else {
-        player.rotation = 1.50;
-      }
+    velocity += 0.3;
+    player.position.y += velocity;
+
+    if (player.rotation < 1.5) {
+      player.rotation += 0.075;
     } else {
-      player.position.y -= 1.75;
-
-      if (player.rotation > -1) {
-        player.rotation -= 0.15;
-      } else {
-        player.rotation === -1;
-      }
+      player.rotation = 1.5;
     }
+
+    if (jump === true) {
+      player.rotation = -0.5;
+      velocity = -3;
+    }
+
+    if (player.position.y >= 194) {
+      player.position.y = 194;
+    }
+
     ticker.update();
     renderer.render(stage);
     requestAnimationFrame(animate);
