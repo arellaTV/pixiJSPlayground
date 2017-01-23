@@ -170,6 +170,8 @@ function setup() {
     jump = false;
     flap.press = null;
     flap.release = null;
+    background.on('mousedown', () => {});
+    background.on('mouseup', () => {});
     if (player.position.y >= 195) {
       player.position.y = 195;
       cancelAnimationFrame(animation);
