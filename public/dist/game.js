@@ -44,13 +44,25 @@ function keyboard(keyCode) {
   return key;
 }
 
-var keyObject = keyboard(32);
+var flap = keyboard(32);
+var reset = keyboard(82);
+
+reset.press = function() {
+  console.log('reset!');
+  stage.removeChildren();
+  setup();
+}
+
+reset.release = function() {
+  console.log('reset release');
+}
 
 PIXI.loader
 .add('images/spritesheet.png')
 .load(setup);
 
 function setup() {
+  console.log('in setup');
   var texture = new PIXI.BaseTexture.fromImage('images/spritesheet.png');
 
   var playerRectangle1 = new PIXI.Rectangle(3, 491, 17, 12);
@@ -80,8 +92,9 @@ function setup() {
   background.interactive = true;
   background.on('mousedown', onButtonDown);
   background.on('mouseup', onButtonUp);
-  keyObject.press = onButtonDown.bind(this);
-  keyObject.release = onButtonUp.bind(this);
+  flap.press = onButtonDown.bind(this);
+  flap.release = onButtonUp.bind(this);
+  console.log(flap.press);
 
   var jump = false;
 
@@ -110,7 +123,7 @@ function setup() {
       var randomY = Math.round(Math.random() * 100) + 80;
 
       for (var i = 0; i < pipes.children.length; i++) {
-        if (pipes.children[i].position.x < 0) {
+        if (pipes.children[i].position.x + pipes.children[i].width < 0) {
           pipes.children[i].destroy();
         }
       }
@@ -155,6 +168,12 @@ function setup() {
     x_velocity = 0;
     player.animationSpeed = 0;
     jump = false;
+    flap.press = null;
+    flap.release = null;
+    if (player.position.y >= 195) {
+      player.position.y = 195;
+      cancelAnimationFrame(animation);
+    }
   }
 
   var y_velocity = 0;
