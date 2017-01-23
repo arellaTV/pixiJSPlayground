@@ -94,27 +94,40 @@ function setup() {
     var sprite1 = entity1.getBounds();
     var sprite2 = entity2.getBounds();
     var overlap = true;
-    if (sprite1.left < sprite2.left && sprite1.right < sprite2.right ||
-        sprite1.left > sprite2.left && sprite1.right > sprite2.right ||
-        sprite1.top < sprite2.top && sprite1.bottom < sprite2.bottom ||
-        sprite1.top > sprite2.top && sprite1.bottom > sprite2.bottom) {
+    if (sprite1.left < sprite2.right && sprite1.right < sprite2.left ||
+        sprite1.left > sprite2.right && sprite1.right > sprite2.left ||
+        sprite1.top < sprite2.bottom && sprite1.bottom < sprite2.top ||
+        sprite1.top > sprite2.bottom && sprite1.bottom > sprite2.top) {
       overlap = false;
+    }
+    if (overlap === true) {
+      console.log(sprite1, sprite2);
     }
     return overlap;
   }
 
-  var velocity = 0;
+  function gameOver(animation) {
+    ground.tilePosition.x = 0;
+    x_velocity = 0;
+    y_velocity = 0;
+    cancelAnimationFrame(animation);
+  }
+
+  var y_velocity = 0;
+  var x_velocity = 1.2;
   function animate() {
-    ground.tilePosition.x -= 1.2;
+    var animation = requestAnimationFrame(animate);
+    ground.tilePosition.x -= x_velocity;
     for (var i = 0; i < pipes.children.length; i++) {
-      pipes.children[i].position.x -= 1.2;
+      pipes.children[i].position.x -= x_velocity;
       if (collision(player, pipes.children[i])) {
         console.log('pipe collision detected!');
+        gameOver(animation);
       }
     }
 
-    velocity += 0.2;
-    player.position.y += velocity;
+    y_velocity += 0.2;
+    player.position.y += y_velocity;
 
     if (player.rotation < 1.5) {
       player.rotation += 0.05;
@@ -123,8 +136,11 @@ function setup() {
     }
 
     if (jump === true) {
+      player.animationSpeed = 0.50;
       player.rotation = -0.5;
-      velocity = -2;
+      y_velocity = -2;
+    } else {
+      player.animationSpeed = 0.15;
     }
 
     if (player.position.y >= 256) {
@@ -133,11 +149,11 @@ function setup() {
 
     if (collision(player, ground)) {
       console.log('collision detected!');
+      gameOver(animation);
     };
 
     ticker.update();
     renderer.render(stage);
-    requestAnimationFrame(animate);
   }
 
   setInterval(() => {
