@@ -29,7 +29,7 @@ function setup() {
   player.animationSpeed = 0.15;
   player.anchor.x = 0.5;
   player.anchor.y = 0.5;
-  player.position.x = 50;
+  player.position.x = 40;
   player.position.y = 60;
   player.play();
   player.rotation = 0;
@@ -66,9 +66,14 @@ function setup() {
   setTimeout(() => {
     setInterval(() => {
       var randomY = Math.round(Math.random() * 100) + 80;
-      if (pipes.children.length > 6) {
-        pipes.removeChildren(0, 2);
+
+      for (var i = 0; i < pipes.children.length; i++) {
+        if (pipes.children[i].position.x < 0) {
+          pipes.removeChildAt(i);
+          console.log(pipes.children[i], 'removed!');
+        }
       }
+
       var topPipeRectangle = new PIXI.Rectangle(56, 323, 26, 160);
       var topPipeTexture = new PIXI.Texture(texture, topPipeRectangle);
       var topPipe = new PIXI.Sprite(topPipeTexture);
@@ -94,10 +99,10 @@ function setup() {
     var sprite1 = entity1.getBounds();
     var sprite2 = entity2.getBounds();
     var overlap = true;
-    if (sprite1.left < sprite2.right && sprite1.right < sprite2.left ||
-        sprite1.left > sprite2.right && sprite1.right > sprite2.left ||
-        sprite1.top < sprite2.bottom && sprite1.bottom < sprite2.top ||
-        sprite1.top > sprite2.bottom && sprite1.bottom > sprite2.top) {
+    if (sprite1.left + 3 < sprite2.right && sprite1.right - 3 < sprite2.left ||
+        sprite1.left + 3 > sprite2.right && sprite1.right - 3 > sprite2.left ||
+        sprite1.top + 3 < sprite2.bottom && sprite1.bottom - 3 < sprite2.top ||
+        sprite1.top + 3 > sprite2.bottom && sprite1.bottom - 3 > sprite2.top) {
       overlap = false;
     }
     if (overlap === true) {
@@ -109,8 +114,7 @@ function setup() {
   function gameOver(animation) {
     ground.tilePosition.x = 0;
     x_velocity = 0;
-    y_velocity = 0;
-    cancelAnimationFrame(animation);
+    // cancelAnimationFrame(animation);
   }
 
   var y_velocity = 0;
