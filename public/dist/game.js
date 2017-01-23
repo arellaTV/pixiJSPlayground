@@ -62,6 +62,7 @@ PIXI.loader
 .load(setup);
 
 function setup() {
+  var scoreCounter = 0;
   console.log('in setup');
   var texture = new PIXI.BaseTexture.fromImage('images/spritesheet.png');
 
@@ -149,6 +150,13 @@ function setup() {
   var text = new PIXI.Text(`FPS: ${Math.round(ticker.FPS)}`,
   {fontSize: 4, dropShadow: true, dropShadowDistance: 1, dropShadowBlur: 1, fill: 'white', fontWeight: 'bold'});
 
+  var score = new PIXI.Text(`${scoreCounter}`, {fontSize: 18, fontFamily: '04b_19', fill: 'white', stroke: 'black',
+                              strokeThickness: 2, dropShadow: true, dropShadowDistance: 1});
+  score.anchor.x = 0.5;
+  score.anchor.y = 0.5;
+  score.position.x = 72;
+  score.position.y = 45;
+
   function collision(entity1, entity2) {
     var sprite1 = entity1.getBounds();
     var sprite2 = entity2.getBounds();
@@ -188,6 +196,12 @@ function setup() {
       if (collision(player, pipes.children[i])) {
         gameOver(animation);
       }
+
+      if (i % 2 === 0 &&   Math.floor(player.position.x) === Math.floor(pipes.children[i].position.x) ) {
+        scoreCounter++;
+        console.log(scoreCounter);
+        score.text = `${scoreCounter }`
+      }
     }
 
     y_velocity += 0.2;
@@ -219,6 +233,7 @@ function setup() {
       gameOver(animation);
     };
 
+
     ticker.update();
     renderer.render(stage);
   }
@@ -230,5 +245,5 @@ function setup() {
   animate();
   stage.scale.x = 1;
   stage.scale.y = 1;
-  stage.addChild(background, pipes, player, ground, text);
+  stage.addChild(background, pipes, player, ground, text, score);
 }
