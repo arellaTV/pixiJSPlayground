@@ -90,11 +90,27 @@ function setup() {
   var text = new PIXI.Text(`FPS: ${Math.round(ticker.FPS)}`,
   {fontSize: 4, dropShadow: true, dropShadowDistance: 1, dropShadowBlur: 1, fill: 'white', fontWeight: 'bold'});
 
+  function collision(entity1, entity2) {
+    var sprite1 = entity1.getBounds();
+    var sprite2 = entity2.getBounds();
+    var overlap = true;
+    if (sprite1.left < sprite2.left && sprite1.right < sprite2.right ||
+        sprite1.left > sprite2.left && sprite1.right > sprite2.right ||
+        sprite1.top < sprite2.top && sprite1.bottom < sprite2.bottom ||
+        sprite1.top > sprite2.top && sprite1.bottom > sprite2.bottom) {
+      overlap = false;
+    }
+    return overlap;
+  }
+
   var velocity = 0;
   function animate() {
     ground.tilePosition.x -= 1.2;
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= 1.2;
+      if (collision(player, pipes.children[i])) {
+        console.log('pipe collision detected!');
+      }
     }
 
     velocity += 0.2;
@@ -111,9 +127,13 @@ function setup() {
       velocity = -2;
     }
 
-    if (player.position.y >= 194) {
-      player.position.y = 194;
+    if (player.position.y >= 256) {
+      player.position.y = 256;
     }
+
+    if (collision(player, ground)) {
+      console.log('collision detected!');
+    };
 
     ticker.update();
     renderer.render(stage);
