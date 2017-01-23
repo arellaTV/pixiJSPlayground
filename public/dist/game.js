@@ -69,8 +69,7 @@ function setup() {
 
       for (var i = 0; i < pipes.children.length; i++) {
         if (pipes.children[i].position.x < 0) {
-          pipes.removeChildAt(i);
-          console.log(pipes.children[i], 'removed!');
+          pipes.children[i].destroy();
         }
       }
 
@@ -105,16 +104,15 @@ function setup() {
         sprite1.top + 3 > sprite2.bottom && sprite1.bottom - 3 > sprite2.top) {
       overlap = false;
     }
-    if (overlap === true) {
-      console.log(sprite1, sprite2);
-    }
+
     return overlap;
   }
 
   function gameOver(animation) {
     ground.tilePosition.x = 0;
     x_velocity = 0;
-    // cancelAnimationFrame(animation);
+    player.animationSpeed = 0;
+    jump = false;
   }
 
   var y_velocity = 0;
@@ -125,7 +123,6 @@ function setup() {
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= x_velocity;
       if (collision(player, pipes.children[i])) {
-        console.log('pipe collision detected!');
         gameOver(animation);
       }
     }
@@ -147,12 +144,11 @@ function setup() {
       player.animationSpeed = 0.15;
     }
 
-    if (player.position.y >= 256) {
-      player.position.y = 256;
+    if (player.position.y >= 195) {
+      player.position.y = 195;
     }
 
     if (collision(player, ground)) {
-      console.log('collision detected!');
       gameOver(animation);
     };
 
@@ -167,5 +163,5 @@ function setup() {
   animate();
   stage.scale.x = 1;
   stage.scale.y = 1;
-  stage.addChild(background, player, pipes, ground, text);
+  stage.addChild(background, pipes, player, ground, text);
 }
