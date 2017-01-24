@@ -48,13 +48,11 @@ var flap = keyboard(32);
 var reset = keyboard(82);
 
 reset.press = function() {
-  console.log('reset!');
   stage.removeChildren();
   setup();
 }
 
 reset.release = function() {
-  console.log('reset release');
 }
 
 PIXI.loader
@@ -63,7 +61,6 @@ PIXI.loader
 
 function setup() {
   var scoreCounter = 0;
-  console.log('in setup');
   var texture = new PIXI.BaseTexture.fromImage('images/spritesheet.png');
 
   var playerRectangle1 = new PIXI.Rectangle(3, 491, 17, 12);
@@ -93,9 +90,6 @@ function setup() {
   background.interactive = true;
   background.on('mousedown', onButtonDown);
   background.on('mouseup', onButtonUp);
-  flap.press = onButtonDown.bind(this);
-  flap.release = onButtonUp.bind(this);
-  console.log(flap.press);
 
   var jump = false;
 
@@ -171,7 +165,7 @@ function setup() {
     return overlap;
   }
 
-  function gameOver(animation) {
+  function gameOver(game) {
     ground.tilePosition.x = 0;
     x_velocity = 0;
     player.animationSpeed = 0;
@@ -182,24 +176,50 @@ function setup() {
     background.on('mouseup', () => {});
     if (player.position.y >= 195) {
       player.position.y = 195;
-      cancelAnimationFrame(animation);
+      cancelAnimationFrame(game);
     }
+  }
+
+  var sinValue = 0;
+  function preGameLoop() {
+    var preGame = requestAnimationFrame(preGameLoop);
+
+    ground.tilePosition.x -= x_velocity;
+    player.position.y = 120 + Math.sin(sinValue) * 4.5;
+    if (sinValue < 100) {
+      sinValue += 0.1;
+    } else {
+      sinValue = 0;
+      console.log('reset sin!');
+    }
+
+    flap.press = function() {
+      gameLoop(preGame);
+      onButtonDown();
+    };
+    flap.release = function() {};
+
+    renderer.render(stage);
   }
 
   var y_velocity = 0;
   var x_velocity = 1.2;
-  function animate() {
-    var animation = requestAnimationFrame(animate);
+  function gameLoop(preGame) {
+    cancelAnimationFrame(preGame);
+
+    flap.press = onButtonDown.bind(this);
+    flap.release = onButtonUp.bind(this);
+
+    var game = requestAnimationFrame(gameLoop);
     ground.tilePosition.x -= x_velocity;
     for (var i = 0; i < pipes.children.length; i++) {
       pipes.children[i].position.x -= x_velocity;
       if (collision(player, pipes.children[i])) {
-        gameOver(animation);
+        gameOver(game);
       }
 
       if (i % 2 === 0 &&   Math.floor(player.position.x) === Math.floor(pipes.children[i].position.x) ) {
         scoreCounter++;
-        console.log(scoreCounter);
         score.text = `${scoreCounter }`
       }
     }
@@ -215,7 +235,7 @@ function setup() {
 
     if (jump === true) {
       player.animationSpeed = 0.50;
-      player.rotation = -0.5;
+      player.rotation = -0.75;
       y_velocity = -2;
     } else {
       player.animationSpeed = 0.15;
@@ -223,6 +243,7 @@ function setup() {
 
     if (player.position.y >= 195) {
       player.position.y = 195;
+      player.rotation = 1.5
     }
 
     if (player.position.y <= 0) {
@@ -230,7 +251,7 @@ function setup() {
     }
 
     if (collision(player, ground)) {
-      gameOver(animation);
+      gameOver(game);
     };
 
 
@@ -242,7 +263,7 @@ function setup() {
     text.text = `FPS: ${Math.round(ticker.FPS)}`;
   }, 1000)
 
-  animate();
+  preGameLoop();
   stage.scale.x = 1;
   stage.scale.y = 1;
   stage.addChild(background, pipes, player, ground, text, score);
